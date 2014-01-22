@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>RiemannMetrics.WebApp</id>
+    <version>$version$</version>
+    <title>Riemann metrics for ASP.NET</title>
+    <authors>Gareth Budden</authors>
+    <owners>Gareth Budden</owners>
+    <licenseUrl>https://github.com/garethbudden/riemann-metrics/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/garethbudden/riemann-metrics</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Sends basic ASP.NET timing metrics to your Riemann server using an IHttpModule</description>
+    <copyright>Copyright Gareth Budden 2014</copyright>
+    <tags>riemann metrics asp.net</tags>
+  </metadata>
+</package>

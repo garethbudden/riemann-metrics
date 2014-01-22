@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <appSettings>
+    <add key="riemann-host" value="" />
+  </appSettings>
+  <system.webServer>
+    <modules>
+      <add name="RiemannWebMetrics" type="RiemannMetrics.WebApp.MetricsModule, RiemannMetrics.WebApp" />
+    </modules>
+  </system.webServer>
+</configuration>
