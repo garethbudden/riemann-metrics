@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <appSettings>
-    <add key="riemann-host" value="" />
+    <add key="riemann-host" value="" /> <!-- enter the host of your Riemann server to enable monitoring -->
   </appSettings>
   <system.webServer>
     <modules>
-      <add name="RiemannWebMetrics" type="RiemannMetrics.WebApp.MetricsModule, RiemannMetrics.WebApp" />
+      <add name="Riemann-RequestTimes" type="RiemannMetrics.WebApp.RequestTimes, RiemannMetrics.WebApp" />
+      <add name="Riemann-Exceptions" type="RiemannMetrics.WebApp.UnhandledExceptions, RiemannMetrics.WebApp" />
     </modules>
   </system.webServer>
 </configuration>

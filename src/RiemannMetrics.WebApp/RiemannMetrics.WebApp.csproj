@@ -50,8 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MetricsModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestTimes.cs" />
+    <Compile Include="Riemann.cs" />
+    <Compile Include="UnhandledExceptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
