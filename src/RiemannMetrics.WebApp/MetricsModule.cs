@@ -41,16 +41,29 @@ namespace RiemannMetrics.WebApp
                     stopwatch.Stop();
                     var metric = (float)stopwatch.Elapsed.TotalMilliseconds / 1000;
 
-                    var service = String.Concat(HostingEnvironment.SiteName,
-                                                HostingEnvironment.ApplicationVirtualPath == "/"
-                                                        ? ""
-                                                        : HostingEnvironment.ApplicationVirtualPath);
-
-                    var evnt = new Event(service, GetState(metric),
+                    var evnt = new Event(GetService(), GetState(metric),
                                         "Time taken for the server to process the request (does not include queue time, wiretime etc...)",
                                         metric);
                     evnt.Tags.Add("request-time");
+                    evnt.Tags.Add(Environment.MachineName);
                     evnt.Tags.Add(context.Request.Path);
+
+                    client.SendEvents(new[] { evnt });
+                }
+            };
+
+            context.Error += (s, e) => 
+            {
+                var exception = context.Server.GetLastError();
+                if (exception == null)
+                    return;
+
+                using (var client = new Client(host, port))
+                {
+                    var evnt = new Event(GetService(), "ok", exception.ToString(), 1);
+                    evnt.Tags.Add("exception");
+                    evnt.Tags.Add(Environment.MachineName);
+                    evnt.Tags.Add(exception.GetType().FullName);
 
                     client.SendEvents(new[] { evnt });
                 }
@@ -66,6 +79,14 @@ namespace RiemannMetrics.WebApp
                 return "warning";
 
             return "critical";
+        }
+
+        private string GetService()
+        {
+            return String.Concat(HostingEnvironment.SiteName,
+                                HostingEnvironment.ApplicationVirtualPath == "/"
+                                        ? ""
+                                        : HostingEnvironment.ApplicationVirtualPath);
         }
     }
 }
