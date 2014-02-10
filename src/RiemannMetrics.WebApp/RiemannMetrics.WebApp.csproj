@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseMetrics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestTimes.cs" />
     <Compile Include="Riemann.cs" />

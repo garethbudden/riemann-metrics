@@ -5,15 +5,12 @@ using System.Web;
 
 namespace RiemannMetrics.WebApp
 {
-    public class RequestTimes : IHttpModule
+    public class RequestTimes : BaseMetrics
     {
         const string ItemKey = "riemann-requestTime";
 
-        public void Init(HttpApplication context)
+        protected override void Register(HttpApplication context)
         {
-            if (!Riemann.ShouldMonitor())
-                return;
-
             context.BeginRequest += context_BeginRequest;
             context.EndRequest += context_EndRequest;
         }
@@ -27,27 +24,17 @@ namespace RiemannMetrics.WebApp
 
         void context_EndRequest(object sender, EventArgs e)
         {
-            using (var client = new Client(Riemann.GetHost(), Riemann.GetPort()))
-            {
-                var stopwatch = ((Stopwatch)HttpContext.Current.Items[ItemKey]);
-                stopwatch.Stop();
-                var metric = (float)stopwatch.Elapsed.TotalMilliseconds / 1000;
+            var stopwatch = ((Stopwatch)HttpContext.Current.Items[ItemKey]);
+            stopwatch.Stop();
 
-                var evnt = new Event(Riemann.GetService(), GetState(metric),
-                                    "Time taken for the server to process the request (does not include queue time, wiretime etc...)",
-                                    metric);
-                evnt.Tags.Add("request-time");
-                evnt.Tags.Add(Environment.MachineName);
-                evnt.Tags.Add(HttpContext.Current.Request.Path);
+            var metric = (float)stopwatch.Elapsed.TotalMilliseconds / 1000;
 
-                client.SendEvents(new[] { evnt });
-            }
+            SendEvent(GetState(metric),
+                    "Time taken for the server to process the request (does not include queue time, wiretime etc...)",
+                    metric,
+                    HttpContext.Current.Request.Path);
         }
-
-        public void Dispose()
-        {
-        }
-
+        
         private string GetState(float metric)
         {
             if (metric <= 0.3)
