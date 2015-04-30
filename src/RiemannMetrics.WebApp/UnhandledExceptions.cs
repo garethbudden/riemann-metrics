@@ -1,5 +1,4 @@
-﻿using Riemann;
-using System;
+﻿using System;
 using System.Web;
 
 namespace RiemannMetrics.WebApp
@@ -17,10 +16,9 @@ namespace RiemannMetrics.WebApp
             if (exception == null)
                 return;
 
-            SendEvent("ok",                         // state
-                    exception.ToString(),           // description
-                    1,                              // metric
-                    exception.GetType().FullName);  // tags
+            SendEvent("ok",             // state
+                "Unhandled exceptions", // description
+                1);                     // metric
         }
     }
 }
