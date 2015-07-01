@@ -18,7 +18,7 @@ namespace RiemannMetrics.WebApp
 
         public static int GetPort()
         {
-            ushort port = 0;
+            ushort port;
 
             if (!UInt16.TryParse(ConfigurationManager.AppSettings["riemann-port"], out port))
                 port = 5555;

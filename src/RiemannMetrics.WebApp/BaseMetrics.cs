@@ -6,6 +6,8 @@ namespace RiemannMetrics.WebApp
 {
     public abstract class BaseMetrics : IHttpModule
     {
+        private string _serviceName;
+
         protected Client Client { get; private set; }
 
         public void Init(HttpApplication context)
@@ -23,9 +25,12 @@ namespace RiemannMetrics.WebApp
                 Client.Dispose();
         }
 
-        protected void SendEvent(string state, string description, float metric, params string[] tags)
+        protected void SendEvent(string appendServiceString, string state, string description, float metric, params string[] tags)
         {
-            var evnt = new Event(Riemann.GetService(), state, description, metric);
+            if (_serviceName == null)
+                _serviceName = String.Concat(Riemann.GetService(), " ", appendServiceString);
+
+            var evnt = new Event(_serviceName, state, description, metric);
             evnt.Tags.Add(Environment.MachineName);
             evnt.Tags.Add(GetType().Name);
 

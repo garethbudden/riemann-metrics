@@ -12,13 +12,20 @@ namespace RiemannMetrics.WebApp
 
         void context_Error(object sender, EventArgs e)
         {
-            var exception = HttpContext.Current.Server.GetLastError();
+            var context = HttpContext.Current;
+
+            if(context == null)
+                return;
+
+            var exception = context.Server.GetLastError();
+
             if (exception == null)
                 return;
 
-            SendEvent("ok",             // state
-                "Unhandled exceptions", // description
-                1);                     // metric
+            SendEvent("unhandled-exceptions",   // appended to servicename => "{serviceName} unhandled-exceptions"
+                      "ok",                     // state
+                      "Unhandled exceptions",   // description
+                      1);                       // metric
         }
     }
 }

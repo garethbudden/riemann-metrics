@@ -1,5 +1,4 @@
-﻿using Riemann;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Web;
 
@@ -24,26 +23,29 @@ namespace RiemannMetrics.WebApp
 
         void context_EndRequest(object sender, EventArgs e)
         {
-            var stopwatch = ((Stopwatch)HttpContext.Current.Items[ItemKey]);
+            var context = HttpContext.Current;
+
+            if (context == null)
+                return;
+
+            var stopwatch = ((Stopwatch)context.Items[ItemKey]);
             stopwatch.Stop();
 
             var metric = (float)stopwatch.Elapsed.TotalMilliseconds / 1000;
 
-            SendEvent(GetState(metric),
+            SendEvent("request-times",
+                    GetState(metric),
                     "Time taken for the server to process the request (does not include queue time, wiretime etc...)",
                     metric,
                     HttpContext.Current.Request.Path);
         }
         
-        private string GetState(float metric)
+        private static string GetState(float metric)
         {
             if (metric <= 0.3)
                 return "ok";
 
-            if (metric <= 0.6)
-                return "warning";
-
-            return "critical";
+            return metric <= 0.6 ? "warning" : "critical";
         }
     }
 }
